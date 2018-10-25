@@ -1,0 +1,24 @@
+{
+  "name": "chatterbox",
+  "version": "1.0.0",
+  "description": "A chat application built by using MEAN stack technologies",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rmamchyk/chatterbox.git"
+  },
+  "author": "Roman Mamchyk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rmamchyk/chatterbox/issues"
+  },
+  "homepage": "https://github.com/rmamchyk/chatterbox#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4"
+  }
+}
