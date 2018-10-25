@@ -1,3 +1,4 @@
+'use strict';
 const dependable = require('dependable');
 const path = require('path');
 
@@ -7,11 +8,15 @@ const simpleDependencies = [
     ['_', 'lodash']
 ];
 
-simpleDependencies.forEach(val => container.register(val[0], () => value[1]));
+simpleDependencies.forEach(val => container.register(val[0], function() {
+    return val[1];
+}));
 
-constainer.load(path.join(__dirname, '/controllers'));
-constainer.load(path.join(__dirname, '/helpers'));
+container.load(path.join(__dirname, '/controllers'));
+container.load(path.join(__dirname, '/helpers'));
 
-container.register('container', () => container);
+container.register('container', function() {
+    return container;
+});
 
 module.exports = container;
