@@ -13,7 +13,7 @@ const passport = require('passport');
 
 const container = require('./container');
 
-container.resolve(function(users) {
+container.resolve(function(users, _) {
     mongoose.Promise = global.Promise;
     mongoose.connect('mongodb://localhost/chatterbox', {useNewUrlParser: true});
 
@@ -40,9 +40,12 @@ container.resolve(function(users) {
         app.use(express.static(__dirname + '/public'));
         app.use(cookieParser());
         app.set('view engine', 'ejs');
+
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({extended: true}));
+        
         app.use(validator());
+        
         app.use(session({
             secret: 'thisisasecretkey',
             resave: true,
@@ -52,5 +55,7 @@ container.resolve(function(users) {
         app.use(flash());
         app.use(passport.initialize());
         app.use(passport.session());
+
+        app.locals._ = _;
     }
 })
