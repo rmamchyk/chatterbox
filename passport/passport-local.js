@@ -30,8 +30,24 @@ passport.use('local.signup', new LocalStrategy({
         newUser.email = req.body.email;
         newUser.password = newUser.encryptPassword(req.body.password);
 
-        newUser.save(err => {
-            done(null, newUser);
-        });
+        newUser.save(err => done(null, newUser));
+    });
+}));
+
+passport.use('local.login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+}, (req, email, password, done) => {
+    User.findOne({'email': email}, (err, user) => {
+        if (err) {
+            return done(err);
+        }
+        const messages = [];
+        if (!user || !user.validPassword(password)) {
+            messages.push('Email doesn\'t exist or Password is invalid')
+            return done(null, false, req.flash('error', messages));
+        }
+        return done(null, user);
     });
 }));
