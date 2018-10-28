@@ -13,7 +13,7 @@ const passport = require('passport');
 
 const container = require('./container');
 
-container.resolve(function(users, _) {
+container.resolve(function(users, _, admin) {
     mongoose.Promise = global.Promise;
     mongoose.connect('mongodb://localhost/chatterbox', {useNewUrlParser: true});
 
@@ -28,6 +28,7 @@ container.resolve(function(users, _) {
         //Setup router
         const router = require('express-promise-router')();
         users.setRouting(router);
+        admin.setRouting(router);
         
         app.use(router);
 
