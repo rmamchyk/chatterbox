@@ -10,6 +10,8 @@ const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const passport = require('passport');
+const socketIO = require('socket.io');
+const {Users} = require('./helpers/UserClass');
 
 const container = require('./container');
 
@@ -17,13 +19,17 @@ container.resolve(function(users, _, admin, home, group) {
     mongoose.Promise = global.Promise;
     mongoose.connect('mongodb://localhost/chatterbox', {useNewUrlParser: true});
 
-    const app = setupExpress();
+    setupExpress();
 
     function setupExpress() {
         const app = express();
         const server = http.createServer(app);
+        const io = socketIO(server);
 
         configureExpress(app);
+
+        require('./socket/groupchat')(io, Users);
+        require('./socket/friend')(io);
         
         //Setup router
         const router = require('express-promise-router')();
@@ -34,7 +40,7 @@ container.resolve(function(users, _, admin, home, group) {
         
         app.use(router);
 
-        server.listen(3000, () => console.log('Listening on port 3000...'));
+        server.listen(3100, () => console.log('Listening on port 3100...'));
     }
 
     function configureExpress(app) {

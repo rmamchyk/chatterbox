@@ -1,4 +1,4 @@
-module.exports = function(async, Club, _) {
+module.exports = function(async, Club, _, Users) {
     return {
         setRouting(router) {
             router.get('/home', this.homePage);
@@ -20,10 +20,19 @@ module.exports = function(async, Club, _) {
                     }], (err, newResult) => {
                        callback(err, newResult) ;
                     });
+                },
+
+                function(callback){
+                    Users.findOne({'username': req.user.username})
+                        .populate('request.userId')
+                        .exec((err, result) => {
+                            callback(err, result);
+                        })
                 }
             ], (err, results) => {
                 const res1 = results[0];
                 const res2 = results[1];
+                const res3 = results[2];
 
                 const dataChunk  = [];
                 const chunkSize = 3;
@@ -33,7 +42,7 @@ module.exports = function(async, Club, _) {
 
                 const countrySort = _.sortBy(res2, '_id');
                 
-                res.render('home', {title: 'Chatterbox - Home', chunks: dataChunk, country: countrySort});
+                res.render('home', {title: 'Chatterbox - Home', user: req.user, chunks: dataChunk, country: countrySort, data: res3});
             });  
         },
     }

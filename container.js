@@ -9,6 +9,7 @@ const simpleDependencies = [
     ['passport', 'passport'],
     ['formidable', 'formidable'],
     ['Club', './models/clubs'],
+    ['Users', './models/user'],
     ['aws', './helpers/AWSUpload'],
     ['async', 'async']
 ];
