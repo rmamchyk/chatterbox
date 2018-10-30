@@ -12,10 +12,11 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const socketIO = require('socket.io');
 const {Users} = require('./helpers/UserClass');
+const {Global} = require('./helpers/Global');
 
 const container = require('./container');
 
-container.resolve(function(users, _, admin, home, group) {
+container.resolve(function(users, _, admin, home, group, results) {
     mongoose.Promise = global.Promise;
     mongoose.connect('mongodb://localhost/chatterbox', {useNewUrlParser: true});
 
@@ -30,6 +31,7 @@ container.resolve(function(users, _, admin, home, group) {
 
         require('./socket/groupchat')(io, Users);
         require('./socket/friend')(io);
+        require('./socket/globalroom')(io, Global, _);
         
         //Setup router
         const router = require('express-promise-router')();
@@ -37,6 +39,7 @@ container.resolve(function(users, _, admin, home, group) {
         admin.setRouting(router);
         home.setRouting(router);
         group.setRouting(router);
+        results.setRouting(router);
         
         app.use(router);
 
