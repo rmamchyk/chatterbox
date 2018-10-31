@@ -1,4 +1,4 @@
-module.exports = function(Users, async, Message, FriendResult) {
+module.exports = function(Users, async, Message, FriendResult, GroupMessage) {
     return {
         setRouting(router) {
             router.get('/group/:name', this.groupPage);
@@ -52,18 +52,46 @@ module.exports = function(Users, async, Message, FriendResult) {
                         }
                     )
                 },
+
+                // load all group messages
+                function(callback){
+                    GroupMessage.find({})
+                         .populate('sender')
+                         .exec((err, result) => {
+                            callback(err, result)
+                         });
+                }
             ], (err, results) => {
                 const res1 = results[0];
                 const res2 = results[1];
+                const res3 = results[2];
                 
                 res.render('groupchat/group',{ title: 'Chatterbox - Group', user: req.user, 
-                    groupName: name, data: res1, chat: res2});
+                    groupName: name, data: res1, chat: res2, groupMsg: res3});
             });
             
         },
 
         groupPostPage: function(req, res){
             FriendResult.PostRequest(req, res, '/group/'+req.params.name);
+
+            async.parallel([
+                function(callback){
+                    if(req.body.message){
+                        const group = new GroupMessage();
+                        group.sender = req.user._id;
+                        group.body = req.body.message;
+                        group.name = req.body.groupName;
+                        group.createdAt = new Date();
+                        
+                        group.save((err, msg) => {
+                            callback(err, msg);
+                        });
+                    }
+                }
+            ], (err, results) => {
+                res.redirect('/group/'+req.params.name);
+            });
         },
         
         logout: function(req, res){

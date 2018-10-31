@@ -48,14 +48,24 @@ $(document).ready(function(){
     $('#message-form').on('submit', function(e){
         e.preventDefault();
         var msg = $('#msg').val();
-        socket.emit('createMessage', {
-            text: msg,
-            room: room,
-            sender: sender
-        }, function(){
-            $('#msg').val('');
-        });
 
         //save a new message to database
+        $.ajax({
+            url: '/group/'+room,
+            type: 'POST',
+            data: {
+                message: msg,
+                groupName: room
+            },
+            success: function(){
+                socket.emit('createMessage', {
+                    text: msg,
+                    room: room,
+                    sender: sender
+                }, function(){
+                    $('#msg').val('');
+                });
+            }
+        })
     });
 });
