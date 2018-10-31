@@ -14,6 +14,7 @@ $(document).ready(function(){
             img: img
         });
         
+        // listen to messages from other users and display them on notifications panel.
         socket.on('message display', function(){
             $('#reload').load(location.href + ' #reload');
         });
