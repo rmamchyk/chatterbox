@@ -13,12 +13,14 @@ const passport = require('passport');
 const socketIO = require('socket.io');
 const {Users} = require('./helpers/UserClass');
 const {Global} = require('./helpers/Global');
+const compression = require('compression');
+const helmet = require('helmet');
 
 const container = require('./container');
 
 container.resolve(function(users, _, admin, home, group, results, privatechat, profile, interests, news) {
     mongoose.Promise = global.Promise;
-    mongoose.connect('mongodb://localhost/chatterbox', {useNewUrlParser: true});
+    mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
 
     setupExpress();
 
@@ -47,11 +49,15 @@ container.resolve(function(users, _, admin, home, group, results, privatechat, p
         news.setRouting(router);
         
         app.use(router);
+        app.use((req, res) => res.render('404'));
 
-        server.listen(3100, () => console.log('Listening on port 3100...'));
+        server.listen(process.env.PORT || 3000, () => console.log('Listening on port 3100...'));
     }
 
     function configureExpress(app) {
+        app.use(compression());
+        app.use(helmet());
+
         require('./passport/passport-local');
         require('./passport/passport-facebook');
         require('./passport/passport-google');
@@ -66,7 +72,7 @@ container.resolve(function(users, _, admin, home, group, results, privatechat, p
         app.use(validator());
         
         app.use(session({
-            secret: 'thisisasecretkey',
+            secret: process.env.SECRET_KEY,
             resave: true,
             saveUninitialized: true,
             store: new MongoStore({mongooseConnection: mongoose.connection})
