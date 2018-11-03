@@ -28,6 +28,7 @@ container.resolve(function(users, _, admin, home, group, results, privatechat, p
         const app = express();
         const server = http.createServer(app);
         const io = socketIO(server);
+        const port = process.env.PORT || 3000;
 
         configureExpress(app);
 
@@ -51,7 +52,8 @@ container.resolve(function(users, _, admin, home, group, results, privatechat, p
         app.use(router);
         app.use((req, res) => res.render('404'));
 
-        server.listen(process.env.PORT || 3000, () => console.log('Listening on port 3100...'));
+
+        server.listen(port || 3000, () => console.log(`Listening on port ${port}...`));
     }
 
     function configureExpress(app) {

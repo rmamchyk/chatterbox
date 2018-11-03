@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A chat application built by using MEAN stack technologies",
   "main": "server.js",
-  "engine": {
+  "engines": {
     "node": "10.6.0",
     "npm": "6.4.1"
   },
