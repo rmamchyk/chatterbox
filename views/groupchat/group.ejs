@@ -34,7 +34,7 @@
 
                                             </div>
                                             <div class="user cover-img">
-                                                <img src="https://placehold.it/300x300" class="img-circle" alt="">
+                                                <img src="https://s3.eu-central-1.amazonaws.com/chatterbox-bucket/<%= user.userImage %>" class="img-circle" alt="">
                                             </div>
                                             <div class="content">
                                                 <div class="main">
@@ -111,7 +111,7 @@
                                     <% if(groupName === val.name) {%>
                                     <li class="left">
                                         <span class="chat-img1 pull-left">
-                                            <img src="http://placehold.it/300x300" class="img-circle" alt="">
+                                            <img src="https://s3.eu-central-1.amazonaws.com/chatterbox-bucket/<%= val.sender.userImage %>" class="img-circle" alt="">
                                         </span>
                                         <div class="chat-body1">
                                             <span class="chat-name"><%= val.sender.username %></span>
