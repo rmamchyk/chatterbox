@@ -1,6 +1,8 @@
 $(document).ready(function(){
     var socket = io();
     
+    var userPic = $('#name-image').val();
+
     var paramOne = $.deparam(window.location.pathname);
     var newParam = paramOne.split('.');
     
@@ -35,7 +37,8 @@ $(document).ready(function(){
         var template = $('#message-template').html();
         var message = Mustache.render(template, {
             text: data.text,
-            sender: data.sender
+            sender: data.sender,
+            userImage: data.image
         });
         $('#messages').append(message);
     });
@@ -57,7 +60,8 @@ $(document).ready(function(){
                     socket.emit('private message', {
                         text: msg,
                         sender: sender,
-                        room: paramOne
+                        room: paramOne,
+                        userPic: userPic
                     }, function(){
                         $('#msg').val('');
                     });

@@ -65,6 +65,7 @@ module.exports = function(Users, async, Message, FriendResult, GroupMessage) {
                 const res1 = results[0];
                 const res2 = results[1];
                 const res3 = results[2];
+                console.log(res3);
                 
                 res.render('groupchat/group',{ title: 'Chatterbox - Group', user: req.user, 
                     groupName: name, data: res1, chat: res2, groupMsg: res3});

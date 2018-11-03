@@ -12,7 +12,8 @@ module.exports = function(io){
             // send the private message to user-receiver.
             io.to(message.room).emit('new message', {
                 text: message.text,
-                sender: message.sender
+                sender: message.sender,
+                image: message.userPic
             });
             
             // send the private message to notifications panel of user-receiver.

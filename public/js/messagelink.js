@@ -16,6 +16,7 @@ $(document).ready(function(){
         // send user joined private chat
         socket.emit('join PM', params);
         
+        // refresh notification panel upon new messages
         socket.on('new refresh', function(){
             $('#reload').load(location.href + ' #reload');
         });

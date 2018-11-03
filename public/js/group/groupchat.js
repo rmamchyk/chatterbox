@@ -21,8 +21,9 @@ $(document).ready(function(){
         var template = $('#message-template').html();
         var message = Mustache.render(template, {
             text: data.text,
-            sender: data.from
-        });   
+            sender: data.from,
+            userImage: data.image
+        });
         $('#messages').append(message);
     })
 
@@ -61,7 +62,8 @@ $(document).ready(function(){
                 socket.emit('createMessage', {
                     text: msg,
                     room: room,
-                    sender: sender
+                    sender: sender,
+                    userPic: userPic
                 }, function(){
                     $('#msg').val('');
                 });

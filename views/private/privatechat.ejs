@@ -12,14 +12,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="/uploads/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/css/group.css">
+
+
 </head>
 
 <body>
-    <%- include ../partials/navbar.ejs %>
+<%- include ../partials/navbar.ejs %>
+
 
     <div class="col-md-12">
         <input type="hidden" id="name-user" value="<%= user.username %>">
-        <input type="hidden" id="name-image" value="<%= user.userImage %>">        
+        <input type="hidden" id="name-image" value="<%= user.userImage %>">
+
         <div class="col-md-12">
             <div class="chat_container">
                 <div class="row">
@@ -34,7 +38,7 @@
 
                                             </div>
                                             <div class="user cover-img">
-                                                <img src="https://placehold.it/300x300" class="img-circle" alt="">
+                                                <img src="https://s3.eu-central-1.amazonaws.com/chatterbox-bucket/<%= user.userImage %>" class="img-circle" alt="">
                                             </div>
                                             <div class="content">
                                                 <div class="main">
@@ -44,12 +48,12 @@
                                                         Online
                                                     </p>
                                                     <p class="text-center">
-                                                    	Mantra
+                                                    	<%= user.mantra %>
                                                     </p>
                                                 </div>
                                                 <div class="footer">
                                                     <i class="fa fa-mail-forward"></i> 
-                                                    <a href="#">
+                                                    <a style="text-decoration:none; color:#4aa1f3" href="/profile/<%= user.username %>">
                                                       View My Profile
                                                     </a>
                                                 </div>
@@ -78,6 +82,7 @@
                                                         <div class="friend" hidden>@<%= value.friendName %></div>
                                                         <% }) %>
                                                     <% } %>
+                                                    
                                                     <div class="onlineFriends"></div>
 
                                                 </div>
@@ -104,13 +109,24 @@
                             </div>
 
                             <div class="chat_area">
-                                    <ul id="messages" class="list-unstyled">
-                                      <% if(chats.length > 0) {%>
-                                       <% _.forEach(chats, function(val) { %>
-                                       <% if(name === val.receiver.username.toLowerCase()) {%>
+                                <ul id="messages" class="list-unstyled">
+                                  <% if(chats.length > 0) {%>
+                                   <% _.forEach(chats, function(val) { %>
+                                   <% if(name === val.receiver.username.toLowerCase()) {%>
+                                    <li class="left">
+                                       <span class="chat-img1 pull-left">
+                                           <img src="https://s3.eu-central-1.amazonaws.com/chatterbox-bucket/<%= val.sender.userImage %>" class="img-circle" alt="">
+                                       </span>
+                                       <div class="chat-body1">
+                                           <span class="chat-name"><%= val.senderName %></span>
+                                           <br>
+                                           <%= val.message %>
+                                       </div>
+                                    </li>
+                                    <% } else if(name === val.sender.username.toLowerCase()) {%>
                                         <li class="left">
                                            <span class="chat-img1 pull-left">
-                                               <img src="http://placehold.it/300x300" class="img-circle" alt="">
+                                               <img src="https://s3.eu-central-1.amazonaws.com/chatterbox-bucket/<%= val.sender.userImage %>" class="img-circle" alt="">
                                            </span>
                                            <div class="chat-body1">
                                                <span class="chat-name"><%= val.senderName %></span>
@@ -118,52 +134,48 @@
                                                <%= val.message %>
                                            </div>
                                         </li>
-                                        <% } else if(name === val.sender.username.toLowerCase()) {%>
-                                            <li class="left">
-                                               <span class="chat-img1 pull-left">
-                                                   <img src="http://placehold.it/300x300" class="img-circle" alt="">
-                                               </span>
-                                               <div class="chat-body1">
-                                                   <span class="chat-name"><%= val.senderName %></span>
-                                                   <br>
-                                                   <%= val.message %>
-                                               </div>
-                                            </li>
-                                        <% } %>
-                                        <% }) %>
-                                        <% } %>
-                                    </ul>
-                                    
-                                    <script id="message-template" type="text/template">
-                                        <li class="left">
-                                           <span class="chat-img1 pull-left">
-                                               <img src="http://placehold.it/300x300" class="img-circle" alt="">
-                                           </span>
-                                           <div class="chat-body1">
-                                               <span class="chat-name">{{ sender }}</span>
-                                               <br>
-                                               {{ text }}
-                                           </div>
-                                        </li>
-                                    </script>
-                                    
-                                </div>
+                                    <% } %>
+                                    <% }) %>
+                                    <% } %>
+                                </ul>
+                                
+                                <script id="message-template" type="text/template">
+                                    <li class="left">
+                                       <span class="chat-img1 pull-left">
+                                           <img src="https://s3.eu-central-1.amazonaws.com/chatterbox-bucket/{{userImage}}" class="img-circle" alt="">
+                                       </span>
+                                       <div class="chat-body1">
+                                           <span class="chat-name">{{ sender }}</span>
+                                           <br>
+                                           {{ text }}
+                                       </div>
+                                    </li>
+                                </script>
+                                
+                            </div>
 
                             <div class="message_write">
                               <form id="message_form" method="post">
-                                    <textarea class="form-control" name="message" id="msg" placeholder="Type a message"></textarea>
-                                    <div class="clearfix"></div>
-                                    <div class="chat_bottom">
-                                    <button id="send-message" class="pull-right btn btn-primary" style="background: #4aa1f3; border: #4aa1f3; ">Send</button>
+
+                                  <textarea class="form-control" name="message" id="msg" placeholder="Type a message"></textarea>
+                                  <div class="clearfix"></div>
+                                  <div class="chat_bottom">
+                                      <button id="send-message" class="pull-right btn btn-primary" style="background: #4aa1f3; border: #4aa1f3; ">
+                                          Send
+                                      </button>
                                   </div>
                               </form>
                             </div>
                         </div>
                     </div>
+
                 </div>
+
             </div>
+
         </div>
     </div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>  
@@ -175,5 +187,5 @@
 <script src="/js/deparam.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.js"></script>
 </body>
-
 </html>
+

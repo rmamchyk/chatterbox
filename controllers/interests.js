@@ -48,10 +48,10 @@ module.exports = function(async, Users, Message, FriendResult){
                     )
                 }
             ], (err, results) => {
-                const result1 = results[0];
-                const result2 = results[1];
+                const res1 = results[0];
+                const res2 = results[1];
                 
-                res.render('user/interest', {title: 'Chatterbox - Interests', user:req.user, data: result1, chat:result2});
+                res.render('user/interest', {title: 'Chatterbox - Interests', user:req.user, data: res1, chat:res2});
             });
         },
         
